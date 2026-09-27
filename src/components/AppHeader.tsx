@@ -10,7 +10,8 @@ const navItems = [
 ] as const;
 
 export function AppHeader() {
-  const { env } = useApp();
+  const { session } = useApp();
+  if (!session) return null;
 
   return (
     <header className="border-b border-border bg-card/80">
@@ -34,15 +35,6 @@ export function AppHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          {env === "demo" ? (
-            <span className="hidden rounded-full border border-border px-3 py-1 text-xs text-muted-foreground sm:inline">
-              Dados de demonstração
-            </span>
-          ) : (
-            <span className="hidden rounded-full border border-border px-3 py-1 text-xs text-muted-foreground sm:inline">
-              Ambiente de teste
-            </span>
-          )}
           <Button asChild size="sm">
             <Link to="/registros/novo">
               <Plus className="size-4" />

@@ -1,31 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useApp } from "@/lib/store";
-import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/configuracoes")({
   head: () => ({
     meta: [
       { title: "Configurações — Memória Pedagógica" },
-      {
-        name: "description",
-        content: "Identificação do professor e ambientes de demonstração e teste.",
-      },
+      { name: "description", content: "Dados da sua conta no Memória Pedagógica." },
       { property: "og:title", content: "Configurações — Memória Pedagógica" },
-      {
-        property: "og:description",
-        content: "Identificação do professor e ambientes de demonstração e teste.",
-      },
+      { property: "og:description", content: "Dados da sua conta no Memória Pedagógica." },
     ],
   }),
   component: Settings,
 });
 
 function Settings() {
-  const { ready, teacherName, setTeacherName, env, setEnv, resetDemo } = useApp();
+  const { ready, teacherName, setTeacherName, email, signOut } = useApp();
+  const [name, setName] = useState(teacherName);
+  const [saving, setSaving] = useState(false);
+  useEffect(() => setName(teacherName), [teacherName]);
   if (!ready) return null;
 
   return (
@@ -34,63 +31,39 @@ function Settings() {
         <h1 className="text-2xl font-semibold">Configurações</h1>
       </header>
 
-      <section className="space-y-2 rounded-xl border border-border bg-card p-4">
-        <Label htmlFor="professor">Seu nome</Label>
-        <Input
-          id="professor"
-          value={teacherName}
-          onChange={(e) => setTeacherName(e.target.value)}
-        />
-        <p className="text-sm text-muted-foreground">
-          Usado apenas na saudação da página inicial.
-        </p>
+      <section className="space-y-4 rounded-xl border border-border bg-card p-4">
+        <h2 className="font-semibold">Sua conta</h2>
+        <div className="space-y-2">
+          <Label htmlFor="professor">Nome</Label>
+          <Input id="professor" value={name} onChange={(e) => setName(e.target.value)} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="conta-email">E-mail</Label>
+          <Input id="conta-email" value={email} readOnly disabled />
+        </div>
+        <Button
+          disabled={saving || !name.trim() || name.trim() === teacherName}
+          onClick={async () => {
+            setSaving(true);
+            try {
+              await setTeacherName(name);
+              toast.success("Alterações salvas");
+            } catch {
+              /* toast already shown */
+            } finally {
+              setSaving(false);
+            }
+          }}
+        >
+          Salvar alterações
+        </Button>
       </section>
 
       <section className="space-y-3 rounded-xl border border-border bg-card p-4">
-        <div>
-          <h2 className="font-semibold">Recursos de demonstração</h2>
-          <p className="text-sm text-muted-foreground">
-            O ambiente de demonstração usa dados fictícios. O ambiente de teste começa vazio e
-            guarda separadamente tudo o que você criar.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {(
-            [
-              { value: "demo", label: "Ambiente de demonstração" },
-              { value: "test", label: "Ambiente de teste" },
-            ] as const
-          ).map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => {
-                setEnv(opt.value);
-                toast.success(`Você está no ${opt.label.toLowerCase()}.`);
-              }}
-              className={cn(
-                "rounded-full border border-border px-3 py-1.5 text-sm",
-                env === opt.value
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary hover:bg-accent",
-              )}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-        {env === "demo" && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              resetDemo();
-              toast.success("Dados de demonstração restaurados");
-            }}
-          >
-            Restaurar dados de demonstração
-          </Button>
-        )}
+        <h2 className="font-semibold">Sessão</h2>
+        <Button variant="outline" onClick={() => signOut()}>
+          Sair da conta
+        </Button>
       </section>
     </div>
   );

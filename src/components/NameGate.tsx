@@ -1,39 +1,111 @@
 import { useState, type ReactNode } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/lib/store";
 
+/** Auth gate: shows login/signup when there is no session. */
 export function NameGate({ children }: { children: ReactNode }) {
-  const { ready, onboarded, completeOnboarding } = useApp();
-  const [name, setName] = useState("");
+  const { authReady, session } = useApp();
+  if (!authReady) return null;
+  if (session) return <>{children}</>;
+  return <AuthScreen />;
+}
 
-  if (!ready) return null;
-  if (onboarded) return <>{children}</>;
+function translate(msg: string) {
+  if (/invalid login/i.test(msg)) return "E-mail ou senha incorretos.";
+  if (/already registered|already exists/i.test(msg)) return "Já existe uma conta com este e-mail.";
+  if (/at least|weak|pwned|leaked/i.test(msg))
+    return "Senha fraca. Use pelo menos 6 caracteres e evite senhas comuns.";
+  if (/valid email|invalid.*email/i.test(msg)) return "Informe um e-mail válido.";
+  return "Não foi possível concluir. Tente novamente.";
+}
+
+function AuthScreen() {
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      if (mode === "login") {
+        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+        if (error) toast.error(translate(error.message));
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: { data: { name: name.trim() }, emailRedirectTo: window.location.origin },
+        });
+        if (error) toast.error(translate(error.message));
+        else if (!data.session) toast.success("Conta criada. Confirme seu e-mail para entrar.");
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const canSubmit =
+    email.trim() && password.length >= 6 && (mode === "login" || name.trim().length > 0);
 
   return (
-    <section className="mx-auto max-w-md rounded-2xl border border-border bg-card p-8 text-center">
-      <h1 className="text-2xl font-semibold">Bem-vindo ao Memória Pedagógica</h1>
-      <p className="mt-2 text-muted-foreground">Como podemos te chamar?</p>
-      <form
-        className="mt-5 space-y-3 text-left"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (!name.trim()) return;
-          completeOnboarding(name.trim());
-        }}
-      >
-        <Label htmlFor="seu-nome">Seu nome</Label>
-        <Input
-          id="seu-nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Ex.: Ana"
-        />
-        <Button type="submit" className="w-full" disabled={!name.trim()}>
-          Continuar
+    <section className="mx-auto mt-10 max-w-md rounded-2xl border border-border bg-card p-8">
+      <p className="text-center text-sm font-bold uppercase tracking-[0.14em] text-foreground">
+        Memória Pedagógica
+      </p>
+      <h1 className="mt-4 text-center text-2xl font-semibold">
+        {mode === "login" ? "Entrar" : "Criar conta"}
+      </h1>
+      <form className="mt-6 space-y-4" onSubmit={submit}>
+        {mode === "signup" && (
+          <div className="space-y-2">
+            <Label htmlFor="auth-nome">Nome</Label>
+            <Input id="auth-nome" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+          </div>
+        )}
+        <div className="space-y-2">
+          <Label htmlFor="auth-email">E-mail</Label>
+          <Input
+            id="auth-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="auth-senha">Senha</Label>
+          <Input
+            id="auth-senha"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
+          />
+          {mode === "signup" && (
+            <p className="text-xs text-muted-foreground">Mínimo de 6 caracteres.</p>
+          )}
+        </div>
+        <Button type="submit" className="w-full" disabled={!canSubmit || busy}>
+          {mode === "login" ? "Entrar" : "Criar conta"}
         </Button>
       </form>
+      <p className="mt-5 text-center text-sm text-muted-foreground">
+        {mode === "login" ? "Não possui uma conta? " : "Já possui uma conta? "}
+        <button
+          type="button"
+          className="font-medium text-foreground underline underline-offset-4"
+          onClick={() => setMode(mode === "login" ? "signup" : "login")}
+        >
+          {mode === "login" ? "Criar conta" : "Voltar ao login"}
+        </button>
+      </p>
     </section>
   );
 }

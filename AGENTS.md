@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture rules
+- Data (classes/students/records/profiles) lives in Lovable Cloud tables with per-user RLS; `src/lib/store.tsx` loads everything on sign-in and applies optimistic updates + direct client writes — keeps the `useApp` API stable for components.
+- Auth gate is `NameGate` (login/signup screen) wrapping `<Outlet />` in `__root.tsx`; signup auto-confirms so users land signed in.
