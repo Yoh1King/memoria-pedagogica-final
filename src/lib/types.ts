@@ -66,7 +66,6 @@ export type EnvironmentData = {
   records: ObservationRecord[];
 };
 
-export type EnvironmentName = "demo" | "test";
 
 export function typeLabel(record: ObservationRecord): string {
   return record.type === "Outro" && record.customType ? record.customType : record.type;
