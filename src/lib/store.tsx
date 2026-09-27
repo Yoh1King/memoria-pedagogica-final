@@ -63,7 +63,7 @@ function recordFromRow(r: any): ObservationRecord {
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 function classToRow(p: Partial<SchoolClass>) {
-  const o: Record<string, unknown> = {};
+  const o: any = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
   if (p.id !== undefined) o.id = p.id;
   if (p.name !== undefined) o.name = p.name;
   if (p.subject !== undefined) o.subject = p.subject;
@@ -74,7 +74,7 @@ function classToRow(p: Partial<SchoolClass>) {
   return o;
 }
 function recordToRow(p: Partial<ObservationRecord>) {
-  const o: Record<string, unknown> = {};
+  const o: any = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
   if (p.id !== undefined) o.id = p.id;
   if (p.classId !== undefined) o.class_id = p.classId;
   if (p.date !== undefined) o.date = p.date;
