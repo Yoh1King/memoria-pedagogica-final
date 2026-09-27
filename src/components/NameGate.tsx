@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,7 @@ function translate(msg: string) {
 }
 
 function AuthScreen() {
+  const router = useRouter();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -37,6 +39,7 @@ function AuthScreen() {
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (error) toast.error(translate(error.message));
+        else await router.navigate({ to: "/" });
       } else {
         const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
