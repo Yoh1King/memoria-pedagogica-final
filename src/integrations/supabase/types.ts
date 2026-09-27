@@ -14,7 +14,148 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      classes: {
+        Row: {
+          archived: boolean
+          created_at: string
+          days: string[]
+          id: string
+          name: string
+          shift: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          archived?: boolean
+          created_at?: string
+          days?: string[]
+          id?: string
+          name: string
+          shift: string
+          subject?: string
+          user_id?: string
+        }
+        Update: {
+          archived?: boolean
+          created_at?: string
+          days?: string[]
+          id?: string
+          name?: string
+          shift?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          id: string
+          name?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      records: {
+        Row: {
+          class_id: string
+          created_at: string
+          custom_classification: string | null
+          custom_type: string | null
+          date: string
+          detail: string | null
+          id: string
+          scope: string
+          student_ids: string[]
+          time: string
+          topic: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          custom_classification?: string | null
+          custom_type?: string | null
+          date: string
+          detail?: string | null
+          id?: string
+          scope: string
+          student_ids?: string[]
+          time?: string
+          topic?: string
+          type: string
+          user_id?: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          custom_classification?: string | null
+          custom_type?: string | null
+          date?: string
+          detail?: string | null
+          id?: string
+          scope?: string
+          student_ids?: string[]
+          time?: string
+          topic?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "records_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      students: {
+        Row: {
+          class_id: string
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          id?: string
+          name: string
+          user_id?: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
