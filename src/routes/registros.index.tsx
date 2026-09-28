@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   Bar,
   BarChart,
+  Cell,
   CartesianGrid,
   Line,
   LineChart,
@@ -25,6 +26,9 @@ import { RecordList, EmptyRecords } from "@/components/RecordList";
 import { useApp } from "@/lib/store";
 import { activeRecords, temporalSeries, typeCounts, withinDays } from "@/lib/selectors";
 import { ALL, applyFilters, emptyFilters, PERIOD_OPTIONS } from "@/lib/filters";
+import { Button } from "@/components/ui/button";
+import { ExportDialog } from "@/components/ExportDialog";
+import { isAttention, isPositive, typeLabel } from "@/lib/types";
 
 export const Route = createFileRoute("/registros/")({
   head: () => ({
@@ -43,6 +47,7 @@ function RecordsPage() {
   const [filters, setFilters] = useState(emptyFilters());
   const [overviewClass, setOverviewClass] = useState(ALL);
   const [overviewPeriod, setOverviewPeriod] = useState("30");
+  const [exporting, setExporting] = useState(false);
 
   if (!ready) return null;
 
@@ -57,11 +62,22 @@ function RecordsPage() {
   const byType = typeCounts(overviewRecords);
   const series = temporalSeries(overviewRecords, overviewPeriod as "7" | "30" | typeof ALL);
 
+  const attentionLabels = new Set(overviewRecords.filter(isAttention).map(typeLabel));
+  const positiveLabels = new Set(overviewRecords.filter(isPositive).map(typeLabel));
+  const barColor = (label: string) =>
+    attentionLabels.has(label)
+      ? "var(--terracotta)"
+      : positiveLabels.has(label)
+        ? "var(--sage)"
+        : "var(--muted-foreground)";
+
   return (
     <div className="space-y-6">
-      <header>
+      <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold">Registros</h1>
+        <Button onClick={() => setExporting(true)}>Exportar registros</Button>
       </header>
+      <ExportDialog open={exporting} onOpenChange={setExporting} />
 
       <Tabs defaultValue="historico">
         <TabsList>
@@ -162,7 +178,11 @@ function RecordsPage() {
                         }}
                         formatter={(v: number) => [`${v} registros`, "Total"]}
                       />
-                      <Bar dataKey="count" fill="var(--primary)" radius={4} name="Registros" />
+                      <Bar dataKey="count" fill="var(--primary)" radius={4} name="Registros">
+                        {byType.map((entry) => (
+                          <Cell key={entry.label} fill={barColor(entry.label)} />
+                        ))}
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
