@@ -295,7 +295,7 @@ export async function generatePdf(data: EnvironmentData, o: ExportOptions, recor
       const wrapped = infoLines.map(([k, v]) => [k, doc.splitTextToSize(v, CW - 34)] as [string, string[]]);
       const detail = r.detail ? (doc.splitTextToSize(r.detail, CW - 10) as string[]) : [];
       const h =
-        16 + wrapped.reduce((a, [, l]) => a + l.length * 4.6, 0) + (detail.length ? detail.length * 4.6 + 3 : 0) + 3;
+        14 + wrapped.reduce((a, [, l]) => a + l.length * 4.6, 0) + (detail.length ? detail.length * 4.6 + 2 : 0);
       ensure(h + 3);
       fill(CARD);
       draw(LINE);
