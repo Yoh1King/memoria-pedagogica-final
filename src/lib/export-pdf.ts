@@ -70,6 +70,7 @@ const colorOf = (r: ObservationRecord): RGB =>
 export async function generatePdf(data: EnvironmentData, o: ExportOptions, records: ObservationRecord[]) {
   const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ unit: "mm", format: "a4" });
+  doc.setLineHeightFactor(1.37);
   const W = 210;
   const H = 297;
   const M = 16;
@@ -276,6 +277,7 @@ export async function generatePdf(data: EnvironmentData, o: ExportOptions, recor
   }
 
   if (o.includeHistory) {
+    ensure(50);
     section("Histórico detalhado");
     records.forEach((r) => {
       const c = colorOf(r);
