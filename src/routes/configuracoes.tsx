@@ -1,9 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { supabase } from "@/integrations/supabase/client";
+import { deleteMyAccount } from "@/lib/account.functions";
 import { useApp } from "@/lib/store";
 
 export const Route = createFileRoute("/configuracoes")({
@@ -61,10 +74,75 @@ function Settings() {
 
       <section className="space-y-3 rounded-xl border border-border bg-card p-4">
         <h2 className="font-semibold">Sessão</h2>
-        <Button variant="outline" onClick={() => signOut()}>
-          Sair da conta
-        </Button>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="outline" onClick={() => signOut()}>
+            Sair da conta
+          </Button>
+          <DeleteAccount />
+        </div>
       </section>
     </div>
+  );
+}
+
+function DeleteAccount() {
+  const del = useServerFn(deleteMyAccount);
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [text, setText] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const confirm = async () => {
+    setBusy(true);
+    try {
+      await del();
+    } catch {
+      toast.error("Não foi possível excluir a conta. Tente novamente.");
+      setBusy(false);
+      return;
+    }
+    await supabase.auth.signOut().catch(() => {});
+    setOpen(false);
+    toast.success("Sua conta foi excluída com sucesso.");
+    await navigate({ to: "/" });
+  };
+
+  return (
+    <AlertDialog
+      open={open}
+      onOpenChange={(o) => {
+        if (busy) return;
+        setOpen(o);
+        if (!o) setText("");
+      }}
+    >
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive">Excluir conta</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Excluir conta</AlertDialogTitle>
+          <AlertDialogDescription>
+            Esta ação é permanente. Sua conta e os dados associados a ela serão excluídos e não
+            poderão ser recuperados.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <div className="space-y-2">
+          <Label htmlFor="confirmar-exclusao">Digite EXCLUIR para confirmar</Label>
+          <Input
+            id="confirmar-exclusao"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            autoComplete="off"
+          />
+        </div>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={busy}>Cancelar</AlertDialogCancel>
+          <Button variant="destructive" disabled={text !== "EXCLUIR" || busy} onClick={confirm}>
+            {busy ? "Excluindo..." : "Excluir conta"}
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
