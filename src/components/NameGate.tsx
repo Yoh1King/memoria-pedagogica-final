@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { useRouter } from "@tanstack/react-router";
+import { useRouter, useRouterState } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,9 +10,67 @@ import { useApp } from "@/lib/store";
 /** Auth gate: shows login/signup when there is no session. */
 export function NameGate({ children }: { children: ReactNode }) {
   const { authReady, session } = useApp();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  if (pathname === "/redefinir-senha") return <>{children}</>;
   if (!authReady) return null;
   if (session) return <>{children}</>;
   return <AuthScreen />;
+}
+
+function ForgotPassword({ onBack }: { onBack: () => void }) {
+  const [email, setEmail] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [sent, setSent] = useState(false);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    await supabase.auth
+      .resetPasswordForEmail(email.trim(), {
+        redirectTo: `${window.location.origin}/redefinir-senha`,
+      })
+      .catch(() => {});
+    setBusy(false);
+    setSent(true);
+  };
+  return (
+    <section className="mx-auto mt-10 max-w-md rounded-2xl border border-border bg-card p-8">
+      <p className="text-center text-sm font-bold uppercase tracking-[0.14em] text-foreground">
+        Memória Pedagógica
+      </p>
+      <h1 className="mt-4 text-center text-2xl font-semibold">Recuperar senha</h1>
+      {sent ? (
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Se existir uma conta associada a este e-mail, você receberá as instruções para redefinir
+          sua senha.
+        </p>
+      ) : (
+        <form className="mt-6 space-y-4" onSubmit={submit}>
+          <div className="space-y-2">
+            <Label htmlFor="rec-email">E-mail</Label>
+            <Input
+              id="rec-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+            />
+          </div>
+          <Button type="submit" className="w-full" disabled={!email.trim() || busy}>
+            Enviar instruções
+          </Button>
+        </form>
+      )}
+      <p className="mt-5 text-center text-sm">
+        <button
+          type="button"
+          className="font-medium text-foreground underline underline-offset-4"
+          onClick={onBack}
+        >
+          Voltar ao login
+        </button>
+      </p>
+    </section>
+  );
 }
 
 function translate(msg: string) {
@@ -31,6 +89,7 @@ function AuthScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [forgot, setForgot] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +116,8 @@ function AuthScreen() {
   const canSubmit =
     email.trim() && password.length >= 6 && (mode === "login" || name.trim().length > 0);
 
+  if (forgot) return <ForgotPassword onBack={() => setForgot(false)} />;
+
   return (
     <section className="mx-auto mt-10 max-w-md rounded-2xl border border-border bg-card p-8">
       <p className="text-center text-sm font-bold uppercase tracking-[0.14em] text-foreground">
@@ -81,6 +142,12 @@ function AuthScreen() {
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
           />
+          {mode === "signup" && (
+            <p className="text-xs text-muted-foreground">
+              Use um e-mail ao qual você tenha acesso. Ele será utilizado caso precise recuperar sua
+              conta.
+            </p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="auth-senha">Senha</Label>
@@ -93,6 +160,15 @@ function AuthScreen() {
           />
           {mode === "signup" && (
             <p className="text-xs text-muted-foreground">Mínimo de 6 caracteres.</p>
+          )}
+          {mode === "login" && (
+            <button
+              type="button"
+              className="text-xs text-muted-foreground underline underline-offset-4"
+              onClick={() => setForgot(true)}
+            >
+              Esqueceu sua senha?
+            </button>
           )}
         </div>
         <Button type="submit" className="w-full" disabled={!canSubmit || busy}>

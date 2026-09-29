@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
+import { Route as RedefinirSenhaRouteImport } from './routes/redefinir-senha'
 import { Route as AlunosStudentIdRouteImport } from './routes/alunos.$studentId'
 import { Route as RegistrosIndexRouteImport } from './routes/registros.index'
 import { Route as RegistrosNovoRouteImport } from './routes/registros.novo'
@@ -25,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
   id: '/configuracoes',
   path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RedefinirSenhaRoute = RedefinirSenhaRouteImport.update({
+  id: '/redefinir-senha',
+  path: '/redefinir-senha',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AlunosStudentIdRoute = AlunosStudentIdRouteImport.update({
@@ -56,6 +62,7 @@ const TurmasClassIdRoute = TurmasClassIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/redefinir-senha': typeof RedefinirSenhaRoute
   '/alunos/$studentId': typeof AlunosStudentIdRoute
   '/registros/novo': typeof RegistrosNovoRoute
   '/turmas/$classId': typeof TurmasClassIdRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/redefinir-senha': typeof RedefinirSenhaRoute
   '/alunos/$studentId': typeof AlunosStudentIdRoute
   '/registros/novo': typeof RegistrosNovoRoute
   '/turmas/$classId': typeof TurmasClassIdRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/redefinir-senha': typeof RedefinirSenhaRoute
   '/alunos/$studentId': typeof AlunosStudentIdRoute
   '/registros/novo': typeof RegistrosNovoRoute
   '/turmas/$classId': typeof TurmasClassIdRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/configuracoes'
+    | '/redefinir-senha'
     | '/alunos/$studentId'
     | '/registros/novo'
     | '/turmas/$classId'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/configuracoes'
+    | '/redefinir-senha'
     | '/alunos/$studentId'
     | '/registros/novo'
     | '/turmas/$classId'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/configuracoes'
+    | '/redefinir-senha'
     | '/alunos/$studentId'
     | '/registros/novo'
     | '/turmas/$classId'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
+  RedefinirSenhaRoute: typeof RedefinirSenhaRoute
   AlunosStudentIdRoute: typeof AlunosStudentIdRoute
   RegistrosNovoRoute: typeof RegistrosNovoRoute
   TurmasClassIdRoute: typeof TurmasClassIdRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/configuracoes'
       fullPath: '/configuracoes'
       preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/redefinir-senha': {
+      id: '/redefinir-senha'
+      path: '/redefinir-senha'
+      fullPath: '/redefinir-senha'
+      preLoaderRoute: typeof RedefinirSenhaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/alunos/$studentId': {
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
+  RedefinirSenhaRoute: RedefinirSenhaRoute,
   AlunosStudentIdRoute: AlunosStudentIdRoute,
   RegistrosNovoRoute: RegistrosNovoRoute,
   TurmasClassIdRoute: TurmasClassIdRoute,
