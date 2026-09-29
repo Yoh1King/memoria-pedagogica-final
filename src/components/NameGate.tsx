@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { useRouter } from "@tanstack/react-router";
+import { useRouter, useRouterState } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -89,6 +89,7 @@ function AuthScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [forgot, setForgot] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,6 +116,8 @@ function AuthScreen() {
   const canSubmit =
     email.trim() && password.length >= 6 && (mode === "login" || name.trim().length > 0);
 
+  if (forgot) return <ForgotPassword onBack={() => setForgot(false)} />;
+
   return (
     <section className="mx-auto mt-10 max-w-md rounded-2xl border border-border bg-card p-8">
       <p className="text-center text-sm font-bold uppercase tracking-[0.14em] text-foreground">
@@ -139,6 +142,12 @@ function AuthScreen() {
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
           />
+          {mode === "signup" && (
+            <p className="text-xs text-muted-foreground">
+              Use um e-mail ao qual você tenha acesso. Ele será utilizado caso precise recuperar sua
+              conta.
+            </p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="auth-senha">Senha</Label>
@@ -151,6 +160,15 @@ function AuthScreen() {
           />
           {mode === "signup" && (
             <p className="text-xs text-muted-foreground">Mínimo de 6 caracteres.</p>
+          )}
+          {mode === "login" && (
+            <button
+              type="button"
+              className="text-xs text-muted-foreground underline underline-offset-4"
+              onClick={() => setForgot(true)}
+            >
+              Esqueceu sua senha?
+            </button>
           )}
         </div>
         <Button type="submit" className="w-full" disabled={!canSubmit || busy}>
