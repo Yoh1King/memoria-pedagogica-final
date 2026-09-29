@@ -65,12 +65,13 @@ export function ExportDialog({ open, onOpenChange }: { open: boolean; onOpenChan
   const customInvalid = period === "custom" && (!from || !to || from > to);
   const nothingIncluded = !inc.summary && !inc.charts && !inc.history;
 
-  const onGenerate = async () => {
-    if (!classId) return toast.error("Selecione uma turma.");
-    if (customInvalid) return toast.error("Informe uma data inicial e final válidas.");
-    if (nothingIncluded) return toast.error("Marque ao menos um item em “Incluir no PDF”.");
+  const onGenerate = async (): Promise<void> => {
+    const fail = (m: string) => void toast.error(m);
+    if (!classId) return fail("Selecione uma turma.");
+    if (customInvalid) return fail("Informe uma data inicial e final válidas.");
+    if (nothingIncluded) return fail("Marque ao menos um item em “Incluir no PDF”.");
     if (records.length === 0)
-      return toast.error("Não existem registros correspondentes aos filtros selecionados.");
+      return fail("Não existem registros correspondentes aos filtros selecionados.");
     setBusy(true);
     try {
       await generatePdf(data, opts, records);
