@@ -161,7 +161,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ]);
       if (cancelled) return;
       if (c.error || s.error || r.error) report(c.error || s.error || r.error);
-      setTeacherNameState(p.data?.name ?? "");
+      setTeacherNameState(
+        p.data?.name ||
+          ((session?.user.user_metadata as { name?: string } | undefined)?.name ?? "").trim(),
+      );
       setDataState({
         classes: (c.data ?? []).map(classFromRow),
         students: (s.data ?? []).map(studentFromRow),

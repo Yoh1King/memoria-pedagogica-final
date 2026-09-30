@@ -4,7 +4,9 @@ export function SummaryCard({
   label,
   value,
   extra,
+  valueColor,
 }: {
+  valueColor?: string;
   label: string;
   value: number | string;
   extra?: ReactNode;
@@ -15,7 +17,7 @@ export function SummaryCard({
         <span>{label}</span>
         {extra}
       </div>
-      <p className="mt-2 text-3xl font-semibold">{value}</p>
+      <p className="mt-2 text-3xl font-semibold" style={valueColor ? { color: valueColor } : undefined}>{value}</p>
     </div>
   );
 }

@@ -180,7 +180,12 @@ function AuthScreen() {
         <button
           type="button"
           className="font-medium text-foreground underline underline-offset-4"
-          onClick={() => setMode(mode === "login" ? "signup" : "login")}
+          onClick={() => {
+            setName("");
+            setEmail("");
+            setPassword("");
+            setMode(mode === "login" ? "signup" : "login");
+          }}
         >
           {mode === "login" ? "Criar conta" : "Voltar ao login"}
         </button>
