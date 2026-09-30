@@ -53,6 +53,7 @@ function Settings() {
         <div className="space-y-2">
           <Label htmlFor="conta-email">E-mail</Label>
           <Input id="conta-email" value={email} readOnly disabled />
+          <ChangeEmail current={email} />
         </div>
         <Button
           disabled={saving || !name.trim() || name.trim() === teacherName}
