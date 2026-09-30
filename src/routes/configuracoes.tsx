@@ -53,6 +53,7 @@ function Settings() {
         <div className="space-y-2">
           <Label htmlFor="conta-email">E-mail</Label>
           <Input id="conta-email" value={email} readOnly disabled />
+          <ChangeEmail current={email} />
         </div>
         <Button
           disabled={saving || !name.trim() || name.trim() === teacherName}
@@ -144,5 +145,59 @@ function DeleteAccount() {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+}
+
+function ChangeEmail({ current }: { current: string }) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+  const [busy, setBusy] = useState(false);
+  if (!open)
+    return (
+      <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+        Alterar e-mail
+      </Button>
+    );
+  const save = async () => {
+    const next = value.trim();
+    if (!next || next.toLowerCase() === current.toLowerCase()) return;
+    setBusy(true);
+    const { error } = await supabase.auth.updateUser(
+      { email: next },
+      { emailRedirectTo: `${window.location.origin}/configuracoes` },
+    );
+    setBusy(false);
+    if (error) {
+      if (/already|exists|registered/i.test(error.message))
+        toast.error("Já existe uma conta com este e-mail.");
+      else if (/valid|invalid/i.test(error.message)) toast.error("Informe um e-mail válido.");
+      else toast.error("Não foi possível alterar o e-mail. Tente novamente.");
+      return;
+    }
+    toast.success(
+      "Enviamos um link de confirmação. A alteração será concluída após a confirmação do novo e-mail.",
+    );
+    setOpen(false);
+    setValue("");
+  };
+  return (
+    <div className="space-y-2 pt-2">
+      <Label htmlFor="novo-email">Novo e-mail</Label>
+      <Input
+        id="novo-email"
+        type="email"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        autoComplete="email"
+      />
+      <div className="flex gap-2">
+        <Button size="sm" disabled={busy || !value.trim()} onClick={save}>
+          {busy ? "Enviando..." : "Confirmar alteração"}
+        </Button>
+        <Button size="sm" variant="ghost" disabled={busy} onClick={() => setOpen(false)}>
+          Cancelar
+        </Button>
+      </div>
+    </div>
   );
 }
