@@ -48,7 +48,7 @@ import {
   withinDays,
 } from "@/lib/selectors";
 import { applyFilters, emptyFilters } from "@/lib/filters";
-import { typeLabel, type Student } from "@/lib/types";
+import { isAttention, isPositive, typeLabel, type Student } from "@/lib/types";
 
 type Tab = "panorama" | "alunos" | "registros";
 type Acao = "adicionar" | "importar";
@@ -198,11 +198,13 @@ function ClassPage() {
                 <SummaryCard
                   label="Pontos de atenção (últimos 30 dias)"
                   value={countAttention(last30)}
+                  valueColor="var(--terracotta)"
                   extra={<AttentionInfo />}
                 />
                 <SummaryCard
                   label="Observações positivas (últimos 30 dias)"
                   value={countPositive(last30)}
+                  valueColor="var(--sage)"
                 />
               </div>
 
@@ -210,7 +212,16 @@ function ClassPage() {
                 <h2 className="font-semibold">O que tenho observado</h2>
                 <p className="text-sm text-muted-foreground">Últimos 30 dias</p>
                 <div className="mt-4">
-                  <TypeBars items={typeCounts(last30)} />
+                  <TypeBars
+                    items={typeCounts(last30)}
+                    colorFor={(label) =>
+                      last30.some((r) => isAttention(r) && typeLabel(r) === label)
+                        ? "var(--terracotta)"
+                        : last30.some((r) => isPositive(r) && typeLabel(r) === label)
+                          ? "var(--sage)"
+                          : undefined
+                    }
+                  />
                 </div>
               </section>
 
