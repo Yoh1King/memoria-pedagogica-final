@@ -9,6 +9,7 @@ import {
   classRecords,
   classStudents,
   countAttention,
+  countPositive,
   getClass,
   recordPeopleLabel,
   withinDays,
@@ -77,13 +78,19 @@ function Home() {
         <p className="text-muted-foreground">Um resumo das suas observações recentes.</p>
       </header>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <SummaryCard label="Turmas ativas" value={classes.length} />
         <SummaryCard label="Registros nos últimos 30 dias" value={recent.length} />
         <SummaryCard
           label="Pontos de atenção nos últimos 30 dias"
           value={countAttention(recent)}
+          valueColor="var(--terracotta)"
           extra={<AttentionInfo />}
+        />
+        <SummaryCard
+          label="Observações positivas nos últimos 30 dias"
+          value={countPositive(recent)}
+          valueColor="var(--sage)"
         />
       </div>
 
