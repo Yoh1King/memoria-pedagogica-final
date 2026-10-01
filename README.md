@@ -1,61 +1,120 @@
 # Memória Pedagógica
 
-O **Memória Pedagógica** é uma aplicação web responsiva desenvolvida para apoiar profissionais da educação que realizam o acompanhamento contínuo de turmas ou grupos de alunos, auxiliando no registro, organização e recuperação de observações realizadas ao longo das aulas.
+Aplicação web responsiva desenvolvida para apoiar profissionais da educação no registro, organização e recuperação de observações realizadas ao longo das aulas.
 
-A interface se adapta a diferentes tamanhos de tela, permitindo o acesso tanto por computadores quanto por dispositivos móveis.
+O sistema funciona como uma memória de apoio ao acompanhamento pedagógico, sem realizar diagnósticos ou substituir a análise e a tomada de decisão do profissional.
 
-A proposta busca reduzir o esforço necessário para lembrar e acompanhar informações observadas no cotidiano das turmas, criando uma memória de apoio à prática docente sem substituir a autonomia ou o planejamento do professor.
+> Projeto acadêmico desenvolvido na disciplina de **Tópicos Integradores**, do curso de **Análise e Desenvolvimento de Sistemas — UNAMA**.
+
+## Integrantes
+
+| Nome | Matrícula |
+|---|---|
+| Eduarda Yohana Reis Farias | 04181866 |
+| Hugo Gabriel Alencar Da Silva | 04186328 |
+| Lucas Arthur Silva Farias | 04187948 |
+| Safira Sales Silva Barreto | 04177290 |
 
 ## Como funciona
 
-O fluxo da aplicação é simples:
+O fluxo principal da aplicação é:
 
-**Observar → Registrar → Organizar → Recuperar**
+**Observar → Registrar → Organizar → Recuperar → Utilizar**
 
-Após uma aula, o professor pode registrar situações como dificuldades de compreensão, participação, atenção, avanços e outras observações relevantes.
+Após uma aula ou atividade, o profissional registra observações relacionadas à turma, aos alunos e ao conteúdo trabalhado. Esses registros ficam organizados para consulta posterior e podem auxiliar no acompanhamento e no planejamento das próximas atividades.
 
-Esses registros ficam organizados por turma, aluno, conteúdo e período, permitindo consultar posteriormente o histórico e visualizar panoramas das observações realizadas.
+## Funcionalidades
 
-## Principais funcionalidades
+- Cadastro e autenticação de usuários
+- Cadastro de turmas e alunos
+- Importação de alunos por arquivos CSV e XLSX
+- Registro de observações individuais, em grupo ou para toda a turma
+- Histórico por turma e aluno
+- Filtros para consulta dos registros
+- Panorama das observações por meio de gráficos
+- Exportação dos registros em PDF
+- Recuperação de senha e alteração de e-mail
+- Exclusão de conta e dos dados associados
 
-- Cadastro de turmas e alunos;
-- Importação de alunos por arquivos CSV e XLSX;
-- Registro de observações pós-aula;
-- Histórico por turma e aluno;
-- Filtros para consulta dos registros;
-- Panorama das observações por meio de gráficos;
-- Ambiente de demonstração com dados fictícios, destinado à apresentação e aos testes do MVP.
+## Tecnologias
 
-## Público-alvo
+| Tecnologia | Uso |
+|---|---|
+| React + TypeScript | Desenvolvimento da aplicação |
+| Vite | Ambiente de desenvolvimento e build |
+| TanStack | Estrutura e gerenciamento de rotas |
+| Tailwind CSS + Radix UI | Interface e componentes |
+| Recharts | Visualização dos dados |
+| SheetJS (XLSX) | Importação de planilhas |
+| Lovable Cloud | Banco de dados, autenticação e serviços de backend |
 
-O Memória Pedagógica é direcionado a profissionais da educação que realizam acompanhamento contínuo de turmas ou grupos de alunos e precisam organizar observações realizadas ao longo do tempo.
+O desenvolvimento do MVP e da versão atual contou com apoio da plataforma **Lovable**.
 
-A proposta apresenta maior aderência a contextos em que há contato recorrente com os mesmos alunos e em que o acompanhamento de aspectos como participação, compreensão, atenção, avanços e convivência faz parte da rotina pedagógica.
+## Como executar
 
-## Sobre o projeto
+### Pré-requisitos
 
-O Memória Pedagógica é uma ferramenta de **apoio**. O sistema organiza as informações registradas pelo próprio professor, mas não realiza diagnósticos, não determina intervenções pedagógicas e não substitui a tomada de decisão docente.
+- Node.js instalado
+- npm ou outro gerenciador de pacotes compatível
+- Configuração das variáveis de ambiente necessárias ao backend
 
-O projeto foi inicialmente proposto como uma **Progressive Web App (PWA)**. Durante o desenvolvimento do MVP, foi priorizada a implementação e validação do fluxo principal da solução. A versão atual foi desenvolvida como uma aplicação web responsiva, acessível por computadores e dispositivos móveis através do navegador. Os recursos específicos de PWA permanecem como possibilidade de evolução do projeto.
+### Instalação
 
-## Tecnologias utilizadas
+Clone o repositório:
 
-- **React** e **TypeScript** — desenvolvimento da aplicação;
-- **Vite** — ambiente de desenvolvimento e build;
-- **TanStack** — estrutura e gerenciamento de rotas;
-- **Tailwind CSS** e **Radix UI** — construção e estilização da interface;
-- **Recharts** — visualização dos dados;
-- **SheetJS (XLSX)** — suporte à importação de planilhas.
+```bash
+git clone https://github.com/Yoh1King/memoria-pedagogica-final.git
+cd memoria-pedagogica-final
+```
 
-O MVP foi desenvolvido com apoio da plataforma **Lovable**.
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Execute o projeto:
+
+```bash
+npm run dev
+```
+
+Para gerar a versão de produção:
+
+```bash
+npm run build
+```
+
+> As variáveis e credenciais privadas utilizadas pela aplicação não devem ser adicionadas ao repositório.
+
+## Organização do projeto
+
+```text
+memoria-pedagogica-final/
+├── public/        Arquivos públicos
+├── src/           Código principal da aplicação
+├── supabase/      Configurações e funções relacionadas ao backend
+├── exemplos/      Arquivos CSV/XLSX para testes
+├── package.json   Dependências e scripts
+└── vite.config.ts Configuração do Vite
+```
 
 ## Arquivos para teste
 
-O repositório disponibiliza, na pasta **`/exemplos`**, arquivos de exemplo em **CSV** e **XLSX** com dados fictícios para testar a funcionalidade de importação de alunos.
+A pasta `/exemplos` contém arquivos CSV e XLSX com dados fictícios que podem ser utilizados para testar a importação de alunos.
 
-Site - [ https://lovable.dev/preview/NOEP0Jm96zZA7orIj7kslfH5xbIRWIfQ ]
+## Histórico de desenvolvimento
 
-Projeto acadêmico desenvolvido na disciplina de **Tópicos Integradores**, do curso de **Análise e Desenvolvimento de Sistemas — UNAMA**.
+O desenvolvimento do Memória Pedagógica ocorreu em duas etapas.
 
-**Status:** MVP funcional em fase de testes e validação.
+A primeira correspondeu à construção e estabilização do MVP. Seu histórico de commits e versões foi preservado no repositório:
 
+[**memoria-pedagogica-MVP**](https://github.com/Yoh1King/memoria-pedagogica-MVP)
+
+Após essa etapa, o projeto foi remixado para continuidade do desenvolvimento, originando este repositório. Nesta segunda etapa foram implementadas e refinadas funcionalidades da versão final, incluindo autenticação, persistência dos dados, segurança, exportação de registros e ajustes de interface.
+
+Os dois repositórios foram mantidos para preservar de forma transparente o histórico das duas etapas do desenvolvimento.
+
+## Status
+
+**Versão final em fase de testes e validação.**
