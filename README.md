@@ -6,6 +6,12 @@ O sistema funciona como uma memória de apoio ao acompanhamento pedagógico, sem
 
 > Projeto acadêmico desenvolvido na disciplina de **Tópicos Integradores**, do curso de **Análise e Desenvolvimento de Sistemas — UNAMA**.
 
+## Aplicação publicada
+
+A versão atual do Memória Pedagógica está disponível em:
+
+[**Acessar Memória Pedagógica**](https://memoria-pedagogica-app.lovable.app)
+
 ## Integrantes
 
 | Nome | Matrícula |
