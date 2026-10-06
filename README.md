@@ -27,7 +27,7 @@ O fluxo principal da aplicação é:
 
 **Observar → Registrar → Organizar → Recuperar → Utilizar**
 
-Após uma aula ou atividade, o profissional registra observações relacionadas à turma, aos alunos e ao conteúdo trabalhado. Esses registros ficam organizados para consulta posterior e podem auxiliar no acompanhamento e no planejamento das próximas atividades.
+Após uma aula ou atividade, o responavel por uma atividade registra observações relacionadas à turma, aos alunos e ao conteúdo trabalhado. Esses registros ficam organizados para consulta posterior e podem auxiliar no acompanhamento e no planejamento das próximas atividades.
 
 ## Funcionalidades
 
