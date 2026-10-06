@@ -2,9 +2,23 @@
 
 Aplicação web responsiva desenvolvida para apoiar profissionais da educação no registro, organização e recuperação de observações realizadas ao longo das aulas.
 
-O sistema funciona como uma memória de apoio ao acompanhamento pedagógico, sem realizar diagnósticos ou substituir a análise e a tomada de decisão do profissional.
+O Memória Pedagógica funciona como uma ferramenta de apoio ao acompanhamento pedagógico. Seu objetivo não é realizar diagnósticos ou substituir a análise do profissional, mas facilitar o acesso às informações registradas ao longo do tempo, permitindo que elas sejam utilizadas posteriormente no acompanhamento e planejamento
 
 > Projeto acadêmico desenvolvido na disciplina de **Tópicos Integradores**, do curso de **Análise e Desenvolvimento de Sistemas — UNAMA**.
+
+## Problema 
+
+Durante uma aula ou atividade, diversas informações importantes podem ser observadas pelo profissional responsável pelo acompanhamento dos alunos. Porém, essas informações muitas vezes acabam distribuídas entre cadernos, planilhas e anotações pessoais, dificultando sua organização e recuperação posterior.
+
+O problema identificado não é necessariamente a falta de informação, mas a dificuldade de:
+
+- organizar as observações realizadas;
+- recuperar informações posteriormente;
+- consultar o histórico de um aluno ou turma;
+- identificar informações recorrentes ao longo do tempo;
+- utilizar os registros como apoio para novas atividades e acompanhamentos.
+
+A partir desse problema surgiu o Memória Pedagógica.
 
 ## Aplicação publicada
 
