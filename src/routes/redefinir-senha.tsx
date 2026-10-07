@@ -47,7 +47,9 @@ function ResetPassword() {
 
   const goLogin = async () => {
     await supabase.auth.signOut().catch(() => {});
-    await navigate({ to: "/" });
+    // Drop any leftover recovery fragment so the reset screen isn't reopened.
+    window.history.replaceState(null, "", window.location.pathname);
+    await navigate({ to: "/", replace: true });
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -81,10 +83,15 @@ function ResetPassword() {
         {status === "done" ? "Senha redefinida com sucesso" : "Redefinir senha"}
       </h1>
       {status === "done" && (
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          Sua senha foi alterada. Você já pode voltar ao Memória Pedagógica e entrar com sua nova
-          senha.
-        </p>
+        <div className="mt-6 space-y-4 text-center">
+          <p className="text-sm text-muted-foreground">
+            Sua senha foi alterada. Você já pode voltar ao Memória Pedagógica e entrar com sua nova
+            senha.
+          </p>
+          <Button className="w-full" onClick={goLogin}>
+            Ir para o login
+          </Button>
+        </div>
       )}
       {status === "checking" && (
         <p className="mt-6 text-center text-sm text-muted-foreground">Verificando link...</p>
