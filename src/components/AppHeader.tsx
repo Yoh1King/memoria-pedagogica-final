@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Plus, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/store";
@@ -11,6 +11,10 @@ const navItems = [
 
 export function AppHeader() {
   const { session } = useApp();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // The recovery flow stays visually isolated, like login and signup, even when
+  // the recovery link itself opens a temporary session.
+  if (pathname === "/redefinir-senha") return null;
   if (!session) return null;
 
   return (
