@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useRouter, useRouterState } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -7,10 +7,27 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/lib/store";
 
+// Captured at load, before the auth client consumes the link's URL fragment.
+const openedFromRecoveryLink =
+  typeof window !== "undefined" && /type=recovery/.test(window.location.hash);
+
 /** Auth gate: shows login/signup when there is no session. */
 export function NameGate({ children }: { children: ReactNode }) {
   const { authReady, session } = useApp();
+  const router = useRouter();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // A recovery link always takes priority, even if it landed on another page.
+  useEffect(() => {
+    const go = () => {
+      if (window.location.pathname !== "/redefinir-senha")
+        void router.navigate({ to: "/redefinir-senha" });
+    };
+    if (openedFromRecoveryLink) go();
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") go();
+    });
+    return () => data.subscription.unsubscribe();
+  }, [router]);
   if (pathname === "/redefinir-senha") return <>{children}</>;
   if (!authReady) return null;
   if (session) return <>{children}</>;

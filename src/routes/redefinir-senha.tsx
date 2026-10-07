@@ -20,7 +20,7 @@ export const Route = createFileRoute("/redefinir-senha")({
 
 function ResetPassword() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState<"checking" | "ok" | "invalid">("checking");
+  const [status, setStatus] = useState<"checking" | "ok" | "invalid" | "done">("checking");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [busy, setBusy] = useState(false);
@@ -37,7 +37,7 @@ function ResetPassword() {
     });
     const t = setTimeout(async () => {
       const { data } = await supabase.auth.getSession();
-      setStatus((s) => (s === "ok" ? s : data.session ? "ok" : "invalid"));
+      setStatus((s) => (s === "ok" || s === "done" ? s : data.session ? "ok" : "invalid"));
     }, 1500);
     return () => {
       sub.subscription.unsubscribe();
@@ -69,8 +69,7 @@ function ResetPassword() {
       return;
     }
     await supabase.auth.signOut().catch(() => {});
-    toast.success("Senha redefinida com sucesso. Entre com sua nova senha.");
-    await navigate({ to: "/" });
+    setStatus("done");
   };
 
   return (
@@ -78,7 +77,15 @@ function ResetPassword() {
       <p className="text-center text-sm font-bold uppercase tracking-[0.14em] text-foreground">
         Memória Pedagógica
       </p>
-      <h1 className="mt-4 text-center text-2xl font-semibold">Redefinir senha</h1>
+      <h1 className="mt-4 text-center text-2xl font-semibold">
+        {status === "done" ? "Senha redefinida com sucesso" : "Redefinir senha"}
+      </h1>
+      {status === "done" && (
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Sua senha foi alterada. Você já pode voltar ao Memória Pedagógica e entrar com sua nova
+          senha.
+        </p>
+      )}
       {status === "checking" && (
         <p className="mt-6 text-center text-sm text-muted-foreground">Verificando link...</p>
       )}
