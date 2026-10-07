@@ -13,3 +13,4 @@
 - Data (classes/students/records/profiles) lives in Lovable Cloud tables with per-user RLS; `src/lib/store.tsx` loads everything on sign-in and applies optimistic updates + direct client writes — keeps the `useApp` API stable for components.
 - Auth gate is `NameGate` (login/signup screen) wrapping `<Outlet />` in `__root.tsx`; signup auto-confirms so users land signed in.
 - PWA: vite-plugin-pwa (generateSW, output in dist/client/sw.js) registered only via `src/lib/pwa.ts`, never in dev/preview; `PwaLifecycle` handles install/update/offline UI — keeps preview caches clean.
+- Account-recovery screens (login/signup/reset) render without the app header: `AppHeader` returns null on `/redefinir-senha` regardless of session — keeps the recovery flow visually isolated when a recovery link opens a session.
