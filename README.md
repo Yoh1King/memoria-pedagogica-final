@@ -31,9 +31,9 @@ A versão atual do Memória Pedagógica está disponível em:
 | Nome | Matrícula |
 |---|---|
 | Eduarda Yohana Reis Farias | 04181866 |
-| Hugo Gabriel Alencar Da Silva | 04186328 |
 | Lucas Arthur Silva Farias | 04187948 |
 | Safira Sales Silva Barreto | 04177290 |
+| Hugo Gabriel Alencar Da Silva | 04186328 |
 
 ## Como funciona
 
@@ -55,6 +55,7 @@ Após uma aula ou atividade, o responavel por uma atividade registra observaçõ
 - Exportação dos registros em PDF
 - Recuperação de senha e alteração de e-mail
 - Exclusão de conta e dos dados associados
+- Instalação como aplicativo (PWA) em dispositivos compatíveis
 
 ## Tecnologias
 
@@ -67,6 +68,7 @@ Após uma aula ou atividade, o responavel por uma atividade registra observaçõ
 | Recharts | Visualização dos dados |
 | SheetJS (XLSX) | Importação de planilhas |
 | Lovable Cloud | Banco de dados, autenticação e serviços de backend |
+|PWA (Progressive Web App) | Permite instalar e utilizar a aplicação como aplicativo em dispositivos compatíveis |
 
 O desenvolvimento do MVP e da versão atual contou com apoio da plataforma **Lovable**.
 
@@ -105,7 +107,7 @@ Para gerar a versão de produção:
 npm run build
 ```
 
-> As variáveis e credenciais privadas utilizadas pela aplicação não devem ser adicionadas ao repositório.
+> As configurações públicas necessárias à conexão com o backend podem ser utilizadas no ambiente de desenvolvimento. Credenciais privadas e chaves administrativas não devem ser adicionadas ao repositório.
 
 ## Organização do projeto
 
@@ -131,10 +133,13 @@ A primeira correspondeu à construção e estabilização do MVP. Seu histórico
 
 [**memoria-pedagogica-MVP**](https://github.com/Yoh1King/memoria-pedagogica-MVP)
 
-Após essa etapa, o projeto foi remixado para continuidade do desenvolvimento, originando este repositório. Nesta segunda etapa foram implementadas e refinadas funcionalidades da versão final, incluindo autenticação, persistência dos dados, segurança, exportação de registros e ajustes de interface.
+Após essa etapa, o projeto foi remixado para continuidade do desenvolvimento, originando este repositório. Nesta segunda etapa foram implementadas e refinadas funcionalidades da versão final, incluindo autenticação, persistência dos dados, recuperação de senha, exportação de registros, suporte a PWA e ajustes de interface.
 
 Os dois repositórios foram mantidos para preservar de forma transparente o histórico das duas etapas do desenvolvimento.
 
 ## Status
 
-**Versão final em fase de testes e validação.**
+**Versão funcional publicada, em fase de testes e validação final.**
+
+
+As principais funcionalidades previstas para o Memória Pedagógica estão implementadas. O projeto encontra-se na etapa de verificação de funcionamento, correção de problemas pontuais e preparação para apresentação acadêmica.
