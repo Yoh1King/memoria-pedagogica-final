@@ -8,8 +8,7 @@ O Memória Pedagógica funciona como uma ferramenta de apoio ao acompanhamento p
 
 ## Problema 
 
-Durante uma aula ou atividade, diversas informações importantes podem ser observadas pelo profissional responsável pelo acompanhamento dos alunos. Porém, essas informações muitas vezes acabam distribuídas entre cadernos, planilhas e anotações pessoais, dificultando sua organização e recuperação posterior.
-
+Durante as aulas, o profissional precisa registrar informações sobre o desempenho, as dificuldades e a evolução dos alunos. Porém, esses registros ficam espalhados em cadernos, planilhas e anotações, dificultando a organização e a consulta das informações. Isso pode causar a perda de dados e prejudicar o acompanhamento dos alunos.
 O problema identificado não é necessariamente a falta de informação, mas a dificuldade de:
 
 - organizar as observações realizadas;
