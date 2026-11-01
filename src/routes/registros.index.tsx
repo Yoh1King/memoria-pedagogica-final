@@ -101,7 +101,7 @@ function RecordsPage() {
             value={filters.query}
             onChange={(e) => setFilters({ ...filters, query: e.target.value })}
           />
-          <RecordFilters value={filters} onChange={setFilters} />
+          <RecordFilters value={filters} onChange={setFilters} allowCustomPeriod />
 
           {all.length === 0 ? (
             <EmptyRecords
