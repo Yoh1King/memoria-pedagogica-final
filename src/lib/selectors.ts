@@ -100,7 +100,7 @@ export function studentsInRecords(
 
 export function temporalSeries(
   records: ObservationRecord[],
-  period: "7" | "30" | "todos",
+  period: "7" | "30" | "todos" | "custom",
 ): Array<{ label: string; atencao: number; positivas: number }> {
   const byMonth = period === "todos";
   const monthLabels = [
