@@ -309,6 +309,7 @@ function ClassPage() {
             onChange={setFilters}
             showClass={false}
             scopeClassId={classId}
+            allowCustomPeriod
           />
           {records.length === 0 ? (
             <EmptyRecords

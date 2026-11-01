@@ -1,3 +1,4 @@
+import { daysAgoISO, todayISO } from "./format";
 import { withinDays } from "./selectors";
 import { typeLabel, type EnvironmentData, type ObservationRecord } from "./types";
 
@@ -7,6 +8,8 @@ export type FilterState = {
   type: string;
   topic: string;
   period: string;
+  customStart: string;
+  customEnd: string;
   query: string;
 };
 
@@ -26,6 +29,8 @@ export function emptyFilters(partial?: Partial<FilterState>): FilterState {
     type: ALL,
     topic: ALL,
     period: ALL,
+    customStart: daysAgoISO(30),
+    customEnd: todayISO(),
     query: "",
     ...partial,
   };
@@ -42,7 +47,11 @@ export function applyFilters(
     if (f.studentId !== ALL && !r.studentIds.includes(f.studentId)) return false;
     if (f.type !== ALL && typeLabel(r) !== f.type) return false;
     if (f.topic !== ALL && r.topic !== f.topic) return false;
-    if (f.period !== ALL && !withinDays(r, Number(f.period))) return false;
+    if (f.period === "custom") {
+      const valid =
+        f.customStart !== "" && f.customEnd !== "" && f.customStart <= f.customEnd;
+      if (!valid || r.date < f.customStart || r.date > f.customEnd) return false;
+    } else if (f.period !== ALL && !withinDays(r, Number(f.period))) return false;
     if (query) {
       const names = r.studentIds
         .map((id) => data.students.find((s) => s.id === id)?.name ?? "")
