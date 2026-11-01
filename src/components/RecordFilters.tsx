@@ -6,6 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ALL, PERIOD_OPTIONS, emptyFilters, type FilterState } from "@/lib/filters";
 import { useApp } from "@/lib/store";
 import { activeClasses, classStudents, topics } from "@/lib/selectors";
@@ -17,12 +18,14 @@ export function RecordFilters({
   showClass = true,
   showStudent = true,
   scopeClassId,
+  allowCustomPeriod = false,
 }: {
   value: FilterState;
   onChange: (f: FilterState) => void;
   showClass?: boolean;
   showStudent?: boolean;
   scopeClassId?: string;
+  allowCustomPeriod?: boolean;
 }) {
   const { data } = useApp();
   const classes = activeClasses(data);
@@ -41,6 +44,9 @@ export function RecordFilters({
   const typeOptions = [...OBSERVATION_TYPES.filter((t) => t !== "Outro"), ...customTypes];
 
   const set = (patch: Partial<FilterState>) => onChange({ ...value, ...patch });
+
+  const customRangeValid =
+    value.customStart !== "" && value.customEnd !== "" && value.customStart <= value.customEnd;
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -117,8 +123,36 @@ export function RecordFilters({
               {p.label}
             </SelectItem>
           ))}
+          {allowCustomPeriod && <SelectItem value="custom">Personalizado</SelectItem>}
         </SelectContent>
       </Select>
+
+      {allowCustomPeriod && value.period === "custom" && (
+        <>
+          <Input
+            type="date"
+            aria-label="Data inicial"
+            className="w-40"
+            value={value.customStart}
+            max={value.customEnd || undefined}
+            onChange={(e) => set({ customStart: e.target.value })}
+          />
+          <Input
+            type="date"
+            aria-label="Data final"
+            className="w-40"
+            value={value.customEnd}
+            min={value.customStart || undefined}
+            onChange={(e) => set({ customEnd: e.target.value })}
+          />
+        </>
+      )}
+
+      {allowCustomPeriod && value.period === "custom" && !customRangeValid && (
+        <p className="w-full text-sm text-muted-foreground">
+          Escolha uma data inicial e uma data final válidas para ver os registros do período.
+        </p>
+      )}
 
       <Button
         variant="ghost"
