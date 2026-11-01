@@ -154,9 +154,37 @@ function RecordsPage() {
                     {p.label}
                   </SelectItem>
                 ))}
+                <SelectItem value="custom">Personalizado</SelectItem>
               </SelectContent>
             </Select>
+            {overviewPeriod === "custom" && (
+              <>
+                <Input
+                  type="date"
+                  aria-label="Data inicial"
+                  className="w-40"
+                  value={customStart}
+                  max={customEnd || undefined}
+                  onChange={(e) => setCustomStart(e.target.value)}
+                />
+                <Input
+                  type="date"
+                  aria-label="Data final"
+                  className="w-40"
+                  value={customEnd}
+                  min={customStart || undefined}
+                  onChange={(e) => setCustomEnd(e.target.value)}
+                />
+              </>
+            )}
           </div>
+
+          {overviewPeriod === "custom" && !customRangeValid && (
+            <p className="text-sm text-muted-foreground">
+              Escolha uma data inicial e uma data final válidas para ver os registros do
+              período.
+            </p>
+          )}
 
           {overviewRecords.length === 0 ? (
             <EmptyRecords
