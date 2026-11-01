@@ -29,6 +29,7 @@ import { ALL, applyFilters, emptyFilters, PERIOD_OPTIONS } from "@/lib/filters";
 import { Button } from "@/components/ui/button";
 import { ExportDialog } from "@/components/ExportDialog";
 import { isAttention, isPositive, typeLabel } from "@/lib/types";
+import { daysAgoISO, todayISO } from "@/lib/format";
 
 export const Route = createFileRoute("/registros/")({
   head: () => ({
@@ -47,6 +48,8 @@ function RecordsPage() {
   const [filters, setFilters] = useState(emptyFilters());
   const [overviewClass, setOverviewClass] = useState(ALL);
   const [overviewPeriod, setOverviewPeriod] = useState("30");
+  const [customStart, setCustomStart] = useState(() => daysAgoISO(30));
+  const [customEnd, setCustomEnd] = useState(() => todayISO());
   const [exporting, setExporting] = useState(false);
 
   if (!ready) return null;
@@ -54,13 +57,19 @@ function RecordsPage() {
   const all = activeRecords(data);
   const filtered = applyFilters(data, all, filters);
 
-  const overviewRecords = all.filter(
-    (r) =>
-      (overviewClass === ALL || r.classId === overviewClass) &&
-      (overviewPeriod === ALL || withinDays(r, Number(overviewPeriod))),
-  );
+  const customRangeValid =
+    customStart !== "" && customEnd !== "" && customStart <= customEnd;
+  const overviewRecords = all.filter((r) => {
+    if (overviewClass !== ALL && r.classId !== overviewClass) return false;
+    if (overviewPeriod === "custom")
+      return customRangeValid && r.date >= customStart && r.date <= customEnd;
+    return overviewPeriod === ALL || withinDays(r, Number(overviewPeriod));
+  });
   const byType = typeCounts(overviewRecords);
-  const series = temporalSeries(overviewRecords, overviewPeriod as "7" | "30" | typeof ALL);
+  const series = temporalSeries(
+    overviewRecords,
+    overviewPeriod as "7" | "30" | "todos" | "custom",
+  );
 
   const attentionLabels = new Set(overviewRecords.filter(isAttention).map(typeLabel));
   const positiveLabels = new Set(overviewRecords.filter(isPositive).map(typeLabel));
